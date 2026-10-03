@@ -18,7 +18,7 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '17'
           cache: 'gradle'
 
@@ -27,12 +27,11 @@ jobs:
         with:
           node-version: '18'
 
-      # Gradle Wrapper fayllarını (jar və properties) bərpa edirik
-      - name: Setup Gradle Wrapper files
+      # Gradle Wrapper fayllarını tam təmin edirik
+      - name: Setup Gradle Wrapper
         run: |
           mkdir -p gradle/wrapper
           
-          # gradle-wrapper.properties yaradılır
           cat << 'EOF' > gradle/wrapper/gradle-wrapper.properties
           distributionBase=GRADLE_USER_HOME
           distributionPath=wrapper/dists
@@ -43,21 +42,19 @@ jobs:
           zipStorePath=wrapper/dists
           EOF
 
-          # gradle-wrapper.jar yüklənir
           if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then
             curl -L -o gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/v8.5.0/gradle/wrapper/gradle-wrapper.jar
           fi
 
+      # Lazımi AI modellərini və ONNX fayllarını yükləyirik
       - name: Download AI Models and Web Resources
         run: |
           mkdir -p app/src/main/assets/model
           mkdir -p app/src/main/assets/ort
 
-          # DINOv2 və CLIP ONNX modellərini yükləyirik
           curl -L -o app/src/main/assets/model/model_quantized.onnx https://huggingface.co/Xenova/dinov2-small/resolve/main/onnx/model_quantized.onnx
           curl -L -o app/src/main/assets/model/clip_vision_quantized.onnx https://huggingface.co/Xenova/clip-vit-base-patch32/resolve/main/onnx/vision_model_quantized.onnx
 
-          # ONNX Runtime Web fayllarını kopyalayırıq
           npm install onnxruntime-web@1.18.0 --no-save
           cp node_modules/onnxruntime-web/dist/ort.wasm.min.js app/src/main/assets/ort/
           cp node_modules/onnxruntime-web/dist/ort-wasm.wasm app/src/main/assets/ort/
@@ -67,9 +64,10 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Upload APK Artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: plite-tap-apk
