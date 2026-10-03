@@ -56,6 +56,31 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         web = WebView(this)
+        import android.os.Bundle
+import android.webkit.WebView
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        // Layihənizdə WebView necə adlanırsa həmin dəyişəni götürün (məsələn: webView)
+        val webView = findViewById<WebView>(R.id.webView) 
+
+        // --- BУ AYARLARIN HAMISINI BURA ƏLAVƏ EDİN ---
+        webView.settings.javaScriptEnabled = true
+        webView.settings.allowFileAccess = true
+        webView.settings.allowContentAccess = true
+        webView.settings.domStorageEnabled = true
+        webView.settings.allowFileAccessFromFileURLs = true
+        webView.settings.allowUniversalAccessFromFileURLs = true
+        // ---------------------------------------------
+
+        // Səhifənin yükləndiyi hissə (sizin kodunuzda necə varsa qalır)
+        webView.loadUrl("file:///android_asset/index.html") 
+    }
+}
         setContentView(web)
         web.settings.javaScriptEnabled = true
         web.settings.domStorageEnabled = true   // IndexedDB üçün
