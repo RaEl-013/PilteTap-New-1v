@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.piltetap"
+    namespace = "az.plite.tap"
     compileSdk = 34
 
     defaultConfig {
