@@ -27,12 +27,24 @@ jobs:
         with:
           node-version: '18'
 
-      # Gradle Wrapper faylını bərpa edirik
-      - name: Validate and setup Gradle Wrapper
+      # Gradle Wrapper fayllarını (jar və properties) bərpa edirik
+      - name: Setup Gradle Wrapper files
         run: |
           mkdir -p gradle/wrapper
+          
+          # gradle-wrapper.properties yaradılır
+          cat << 'EOF' > gradle/wrapper/gradle-wrapper.properties
+          distributionBase=GRADLE_USER_HOME
+          distributionPath=wrapper/dists
+          distributionUrl=https\://services.gradle.org/distributions/gradle-8.5-bin.zip
+          networkTimeout=10000
+          validateDistributionUrl=true
+          zipStoreBase=GRADLE_USER_HOME
+          zipStorePath=wrapper/dists
+          EOF
+
+          # gradle-wrapper.jar yüklənir
           if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then
-            echo "gradle-wrapper.jar tapılmadı, yenidən yüklənir..."
             curl -L -o gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/v8.5.0/gradle/wrapper/gradle-wrapper.jar
           fi
 
