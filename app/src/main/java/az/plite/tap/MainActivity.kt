@@ -1,3 +1,4 @@
+import az.plite.tap.R
 package az.plite.tap // Bu sətr mütləq olmalıdır vəAndroidManifest.xml-dəki namespace ilə eyni olmalıdır
 
 import android.os.Bundle
