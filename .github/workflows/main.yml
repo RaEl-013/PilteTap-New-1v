@@ -27,15 +27,15 @@ jobs:
         with:
           node-version: '18'
 
-      # Gradle Wrapper fayllarını tam təmin edirik
-      - name: Setup Gradle Wrapper
+      # XƏTANIN HƏLLİ: Gradle 8.7 versiyası məcbur edilir
+      - name: Setup Gradle Wrapper (v8.7)
         run: |
           mkdir -p gradle/wrapper
           
           cat << 'EOF' > gradle/wrapper/gradle-wrapper.properties
           distributionBase=GRADLE_USER_HOME
           distributionPath=wrapper/dists
-          distributionUrl=https\://services.gradle.org/distributions/gradle-8.5-bin.zip
+          distributionUrl=https\://services.gradle.org/distributions/gradle-8.7-bin.zip
           networkTimeout=10000
           validateDistributionUrl=true
           zipStoreBase=GRADLE_USER_HOME
@@ -43,10 +43,9 @@ jobs:
           EOF
 
           if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then
-            curl -L -o gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/v8.5.0/gradle/wrapper/gradle-wrapper.jar
+            curl -L -o gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/v8.7.0/gradle/wrapper/gradle-wrapper.jar
           fi
 
-      # Lazımi AI modellərini və ONNX fayllarını yükləyirik
       - name: Download AI Models and Web Resources
         run: |
           mkdir -p app/src/main/assets/model
